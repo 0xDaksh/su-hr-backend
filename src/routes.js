@@ -22,6 +22,17 @@ const isLoggedIn = (req, res, next) => {
 	}
 }
 
+const isNotLoggedIn = (req, res, next) => {
+	if(!req.session.user && isUndefined(req.session.user._id)) {
+		res.json({
+			user: null,
+			error: 'user is not logged in'
+		})
+	} else {
+		next()
+	}
+}
+
 router.post('/login', isLoggedIn, (req, res) => {
 	if(isUndefined(req.body.email) && isUndefined(req.body.password)) {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
@@ -60,6 +71,16 @@ router.post('/login', isLoggedIn, (req, res) => {
 			user: null
 		})
 	}
+})
+
+router.get('/user', isNotLoggedIn, (req, res) => {
+	res.json({
+		user: {
+			name: req.session.user.name,
+			hotels: req.session.user.hotels
+		},
+		error: null
+	})
 })
 
 export default router
