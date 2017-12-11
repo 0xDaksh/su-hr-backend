@@ -1,5 +1,6 @@
 import {Router} from 'express'
 import User from './db/models/User'
+import Hotel from './db/models/Hotel'
 import bcrypt from 'bcryptjs'
 const router = new Router()
 
