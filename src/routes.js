@@ -28,11 +28,42 @@ const isNotLoggedIn = (req, res, next) => {
 }
 
 router.get('/logout', isLoggedIn, (req, res) => {
-	console.log('yo?')
 	req.session.destroy()
 	res.json({
 		loggedOut: true
 	})
+})
+
+router.get('/hotels/:id', (req, res) => {
+	if(req.params.id !== '') {
+		Hotel.findOne({id: req.params.id}, (err, hotel) => {
+			if(err) {
+				res.json({
+					error: 'server issue',
+					hotel: null
+				})
+			}
+			if(!hotel) {
+				res.json({
+					error: 'hotel not found',
+					hotel: null
+				})	
+			} else {
+				res.json({
+					name: hotel.name,
+					address: hotel.address,
+					averageRating: hotel.averageRating,
+					image: hotel.image, 
+					id: hotel.id
+				})
+			}
+		})		
+	} else {
+		res.json({
+			error: 'hotel not found',
+			hotel: null
+		})
+	}
 })
 
 router.get('/hotels', (req, res) => {
