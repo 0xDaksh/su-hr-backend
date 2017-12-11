@@ -117,7 +117,7 @@ router.post('/signup', isNotLoggedIn, (req, res) => {
 					if(err) {
 						res.json({
 							user: null,
-							error: 'server issue'
+							error: 'anotheraccount'
 						})
 					} else {
 						req.session.user = nu
