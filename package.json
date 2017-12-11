@@ -8,5 +8,23 @@
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babel-register": "^6.26.0"
-  }
+  },
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StayUncle-Hiring-Challenge/backend.git"
+  },
+  "keywords": [],
+  "author": "Daksh Miglani <hello@dak.sh> (https://dak.sh)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/StayUncle-Hiring-Challenge/backend/issues"
+  },
+  "homepage": "https://github.com/StayUncle-Hiring-Challenge/backend#readme",
+  "description": ""
 }
