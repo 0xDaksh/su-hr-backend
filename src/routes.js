@@ -45,7 +45,7 @@ router.get('/logout', isLoggedIn, (req, res) => {
 router.post('/book', isLoggedIn, (req, res) => {
 	if(req.body.id && req.body.id !== '') {
 		Hotel.findOne({id: req.body.id}).exec((err, hotel) => {
-			if(!err) {
+			if(err) {
 				throwServerIssue(res, 'booked')
 			} else {
 				if(!hotel) {
