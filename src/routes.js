@@ -27,6 +27,14 @@ const isNotLoggedIn = (req, res, next) => {
 	}
 }
 
+router.get('/logout', isLoggedIn, (req, res) => {
+	console.log('yo?')
+	req.session.destroy()
+	res.json({
+		loggedOut: true
+	})
+})
+
 router.get('/hotels', (req, res) => {
 	Hotel.find({}).exec((err, hotels) => {
 		if(err) {
