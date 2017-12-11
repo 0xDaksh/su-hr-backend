@@ -16,13 +16,13 @@ const isLoggedIn = (req, res, next) => {
 }
 
 const isNotLoggedIn = (req, res, next) => {
-	if(!req.session.user && typeof req.session.user == 'undefined' && typeof req.session.user._id == 'undefined') {
-		next()
-	} else {
+	if(req.session.user && typeof req.session.user !== 'undefined' && typeof req.session.user._id !== 'undefined') {
 		res.json({
 			user: null,
 			error: 'user is not logged in'
 		})
+	} else {
+		next()
 	}
 }
 
