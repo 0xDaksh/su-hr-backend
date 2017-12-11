@@ -50,11 +50,14 @@ router.get('/hotels/:id', (req, res) => {
 				})	
 			} else {
 				res.json({
-					name: hotel.name,
-					address: hotel.address,
-					averageRating: hotel.averageRating,
-					image: hotel.image, 
-					id: hotel.id
+					hotel: {
+						name: hotel.name,
+						address: hotel.address,
+						averageRating: hotel.averageRating,
+						image: hotel.image, 
+						id: hotel.id
+					},
+					error: null
 				})
 			}
 		})		
