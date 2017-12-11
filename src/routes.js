@@ -34,6 +34,35 @@ const isNotLoggedIn = (req, res, next) => {
 	}
 }
 
+router.get('/hotels', (req, res) => {
+	Hotel.find({}).exec((err, hotels) => {
+		if(err) {
+			res.json({
+				hotels: null,
+				error: 'server issue'
+			})
+		}
+		if(hotels.length > 0) {
+			res.json({
+				hotels: hotels.map((hotel) => {
+					return {
+						name: hotel.name,
+						address: hotel.address,
+						averageRating: hotel.averageRating,
+						image: hotel.image
+					}
+				}),
+				error: null
+			})
+		} else {
+			res.json({
+				hotels: [],
+				error: null
+			})
+		}
+	})
+})
+
 router.post('/login', isLoggedIn, (req, res) => {
 	if(isUndefined(req.body.email) && isUndefined(req.body.password)) {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
