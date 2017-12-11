@@ -2,7 +2,7 @@ require('babel-register')({
 	presets: ['es2015', 'es2017']
 })
 
-var server = require('./src/index')
+var server = require('./src/index').app
 
 server.listen(process.env.PORT || 8000, () => {
 	console.log('express server has been started.')

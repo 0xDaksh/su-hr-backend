@@ -10,4 +10,6 @@ middleware(app)
 app.use('/', routes)
 
 // export it
-export default app
+export {
+	app
+}
