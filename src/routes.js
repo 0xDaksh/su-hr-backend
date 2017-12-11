@@ -50,7 +50,8 @@ router.get('/hotels', (req, res) => {
 						name: hotel.name,
 						address: hotel.address,
 						averageRating: hotel.averageRating,
-						image: hotel.image
+						image: hotel.image,
+						id: hotel.id
 					}
 				}),
 				error: null
