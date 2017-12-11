@@ -1,16 +1,17 @@
-import expressSession from 'express-session'
+import Session from 'express-session'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 const cors = require('cors')
-const sess = new expressSession({
-	secret: "yoyo-boy-showttime" + Math.random().toString(36).substr(7),
-	resave: true,
-	saveUninitialized: true
+
+let session = new Session({
+	secret: Math.random().toString(24).substr(7),
+	saveUninitialized: true,
+	resave: true
 })
 
 export default (app) => {
-	app.use(cors());	
+	app.use(session)
+	app.use(cors({origin: 'http://localhost:8080', credentials: true}))
 	app.use(cookieParser())
 	app.use(bodyParser.json())
-	app.use(sess)
 }
