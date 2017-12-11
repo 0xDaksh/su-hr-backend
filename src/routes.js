@@ -56,7 +56,7 @@ router.get('/hotels', (req, res) => {
 })
 
 router.post('/login', isNotLoggedIn, (req, res) => {
-	if(isUndefined(req.body.email) && isUndefined(req.body.password)) {
+	if(req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '') {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
 				res.status(500).json({
