@@ -8,13 +8,12 @@
     "express-session": "^1.15.6",
     "gravatar": "^1.6.0",
     "mongoose": "^4.13.6",
-    "shortid": "^2.2.8"
-  },
-  "devDependencies": {
+    "shortid": "^2.2.8",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
     "babel-register": "^6.26.0"
   },
+  
   "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
