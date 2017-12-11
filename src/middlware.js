@@ -11,7 +11,7 @@ let session = new Session({
 
 export default (app) => {
 	app.use(session)
-	app.use(cors({origin: 'http://localhost:8080', credentials: true}))
+	app.use(cors({origin: 'http://stayunclehiring.surge.sh', credentials: true}))
 	app.use(cookieParser())
 	app.use(bodyParser.json())
 }
