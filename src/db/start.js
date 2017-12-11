@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
+import config from './config'
 
 export default () => {
-	mongoose.connect(require('./config').url)
+	mongoose.connect(config.url)
 }
