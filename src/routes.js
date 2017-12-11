@@ -4,33 +4,25 @@ import Hotel from './db/models/Hotel'
 import bcrypt from 'bcryptjs'
 const router = new Router()
 
-const isUndefined = (param) => {
-	if(typeof param !== 'undefined') {
-		return true
-	}
-
-	return false
-}
-
 const isLoggedIn = (req, res, next) => {
-	if(!req.session.user && isUndefined(req.session.user._id)) {
+	if(req.session.user && typeof req.session.user !== 'undefined' && typeof req.session.user._id !== 'undefined') {
 		next()
 	} else {
 		res.json({
 			user: null,
-			error: 'user is already logged in'
+			error: 'user is not logged in'
 		})
 	}
 }
 
 const isNotLoggedIn = (req, res, next) => {
-	if(!req.session.user && isUndefined(req.session.user._id)) {
+	if(!req.session.user && typeof req.session.user == 'undefined' && typeof req.session.user._id == 'undefined') {
+		next()
+	} else {
 		res.json({
 			user: null,
 			error: 'user is not logged in'
 		})
-	} else {
-		next()
 	}
 }
 
@@ -63,7 +55,7 @@ router.get('/hotels', (req, res) => {
 	})
 })
 
-router.post('/login', isLoggedIn, (req, res) => {
+router.post('/login', isNotLoggedIn, (req, res) => {
 	if(isUndefined(req.body.email) && isUndefined(req.body.password)) {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
@@ -103,7 +95,7 @@ router.post('/login', isLoggedIn, (req, res) => {
 	}
 })
 
-router.get('/user', isNotLoggedIn, (req, res) => {
+router.get('/user', isLoggedIn, (req, res) => {
 	res.json({
 		user: {
 			name: req.session.user.name,
