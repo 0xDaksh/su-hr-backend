@@ -57,6 +57,7 @@ router.get('/hotels', (req, res) => {
 })
 
 router.post('/login', isNotLoggedIn, (req, res) => {
+	console.log(req.body)
 	if(req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '') {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
@@ -98,6 +99,7 @@ router.post('/login', isNotLoggedIn, (req, res) => {
 })
 
 router.post('/signup', isNotLoggedIn, (req, res) => {
+	console.log(req.body.name, req.body.email, req.body.password)
 	if(req.body.name && req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '' && req.body.name !== '') {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
