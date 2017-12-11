@@ -11,7 +11,8 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	hotels: [{type: Schema.Types.ObjectId, ref: 'Hotel'}]
+	hotels: [{type: Schema.Types.ObjectId, ref: 'Hotel'}],
+	avatar: String
 })
 
 module.exports = mongoose.model('User', UserSchema)

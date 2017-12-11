@@ -2,6 +2,7 @@ import {Router} from 'express'
 import User from './db/models/User'
 import Hotel from './db/models/Hotel'
 import bcrypt from 'bcryptjs'
+import gravatar from 'gravatar'
 const router = new Router()
 
 const isLoggedIn = (req, res, next) => {
@@ -75,7 +76,8 @@ router.post('/login', isNotLoggedIn, (req, res) => {
 					res.json({
 						user: {
 							name: user.name,
-							hotels: user.hotels
+							hotels: user.hotels,
+							avatar: user.avatar
 						},
 						error: null
 					})
@@ -95,11 +97,62 @@ router.post('/login', isNotLoggedIn, (req, res) => {
 	}
 })
 
+router.post('/signup', isNotLoggedIn, (req, res) => {
+	if(req.body.name && req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '' && req.body.name !== '') {
+		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
+			if(err) {
+				res.status(500).json({
+					user: null,
+					error: 'server issue'
+				})	
+			}
+			if(!user) {
+				var nu = new User({
+					email: req.body.email,
+					name: req.body.name,
+					password: bcrypt.hashSync(req.body.password, 10),
+					avatar: gravatar.url(req.body.email, { protocol: 'https', s: '500', d: 'retro' })
+				})
+				nu.save(err => {
+					if(err) {
+						res.json({
+							user: null,
+							error: 'server issue'
+						})
+					} else {
+						req.session.user = nu
+						res.json({
+							user: {
+								name: req.session.user.name,
+								hotels: req.session.user.hotels,
+								avatar: req.session.user.avatar
+							},
+							error: null
+						})
+					}
+				})
+				
+			} else {
+				res.json({
+					user: null,
+					error: 'anotheraccount'
+				})
+			}
+		})
+	} else {
+		res.json({
+			error: 'please provide email and password',
+			user: null
+		})	
+	}
+})
+
 router.get('/user', isLoggedIn, (req, res) => {
 	res.json({
 		user: {
 			name: req.session.user.name,
-			hotels: req.session.user.hotels
+			hotels: req.session.user.hotels,
+			avatar: req.session.user.avatar
 		},
 		error: null
 	})
