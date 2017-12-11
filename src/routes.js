@@ -27,6 +27,14 @@ const isNotLoggedIn = (req, res, next) => {
 	}
 }
 
+const throwServerIssue = (res, prop) => {
+	let obj = {
+		error: 'server issue'
+	}
+	obj[prop] = null
+	res.json(obj)
+}
+
 router.get('/logout', isLoggedIn, (req, res) => {
 	req.session.destroy()
 	res.json({
@@ -34,14 +42,44 @@ router.get('/logout', isLoggedIn, (req, res) => {
 	})
 })
 
+router.post('/book', isLoggedIn, (req, res) => {
+	if(req.body.id && req.body.id !== '') {
+		Hotel.findOne({id: req.body.id}).exec((err, hotel) => {
+			if(!err) {
+				throwServerIssue(res, 'booked')
+			} else {
+				if(!hotel) {
+					res.json({
+						error: 'no hotel found',
+						booked: null
+					})
+				} else {
+					User.findById(req.session.user._id, (err, user) => {
+						user.hotels.push(hotel._id)
+						hotel.users.push(user._id)
+						hotel.save()
+						user.save()
+					})
+					res.json({
+						error: null,
+						booked: true
+					})
+				}
+			}
+		})
+	} else {
+		res.json({
+			error: 'id wasnt provided',
+			booked: null			
+		})
+	}
+})
+
 router.get('/hotels/:id', (req, res) => {
 	if(req.params.id !== '') {
 		Hotel.findOne({id: req.params.id}, (err, hotel) => {
 			if(err) {
-				res.json({
-					error: 'server issue',
-					hotel: null
-				})
+				throwServerIssue(res, 'hotel')
 			}
 			if(!hotel) {
 				res.json({
@@ -72,10 +110,7 @@ router.get('/hotels/:id', (req, res) => {
 router.get('/hotels', (req, res) => {
 	Hotel.find({}).exec((err, hotels) => {
 		if(err) {
-			res.json({
-				hotels: null,
-				error: 'server issue'
-			})
+			throwServerIssue(res, 'hotels')
 		}
 		if(hotels.length > 0) {
 			res.json({
@@ -103,10 +138,7 @@ router.post('/login', isNotLoggedIn, (req, res) => {
 	if(req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '') {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
-				res.status(500).json({
-					user: null,
-					error: 'server issue'
-				})	
+				throwServerIssue(res, 'user')
 			}
 			if(!user) {
 				res.json({
@@ -144,10 +176,7 @@ router.post('/signup', isNotLoggedIn, (req, res) => {
 	if(req.body.name && req.body.email && req.body.password && req.body.email !== '' && req.body.password !== '' && req.body.name !== '') {
 		User.findOne({email: req.body.email}).populate('hotels').exec((err, user) => {
 			if(err) {
-				res.status(500).json({
-					user: null,
-					error: 'server issue'
-				})	
+				throwServerIssue(res, 'user')
 			}
 			if(!user) {
 				var nu = new User({
