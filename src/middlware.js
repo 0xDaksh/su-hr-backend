@@ -16,6 +16,6 @@ export default (app, io) => {
 	io.use(socketSession(session, {
 		autoSave: true
 	}))
-	app.use(cors({origin: '*', credentials: true}))
+	app.use(cors({origin: 'http://localhost:8080', credentials: true}))
 	app.use(bodyParser.json())
 }
