@@ -13,7 +13,10 @@ const UserSchema = new Schema({
 	},
 	bookings: [{type: Schema.Types.ObjectId, ref: 'Booking'}],
 	avatar: String,
-	money: Number
+	money: {
+		type: Number,
+		default: 0
+	}
 })
 
 module.exports = mongoose.model('User', UserSchema)
