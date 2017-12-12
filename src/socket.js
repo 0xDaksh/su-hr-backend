@@ -22,4 +22,24 @@ export default (ws) => {
 			}
 		})		
 	}))
+
+	ws.on('rechargewallet', (val) => loginCheck(ws, (acc) => {
+		User.findById(acc._id, (err, user) => {
+			if(err) {
+				ws.emit('err', 'server-issue')
+			}
+			if(user) {
+				user.money += val
+				user.save((err) => {
+					if(!err) {
+						ws.emit('returnRechargeWallet', user.money)
+					} else {
+						ws.emit('err', 'server-issue')
+					}
+				})
+			} else {
+				ws.emit('err', 'no-user')
+			}
+		})
+	}))
 }
