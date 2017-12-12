@@ -33,6 +33,8 @@ export default (ws) => {
 				user.money += val
 				user.save((err) => {
 					if (!err) {
+						ws.handshake.session.money = user.money
+						ws.handshake.session.save()
 						ws.emit('returnRechargeWallet', user.money)
 					} else {
 						ws.emit('err', 'server-issue')
@@ -52,6 +54,40 @@ export default (ws) => {
 				ws.emit('returnBookings', bookings)
 			} else {
 				ws.emit('err', 'no-booking')
+			}
+		})
+	}))
+	ws.on('bookHotel', (id) => loginCheck(ws, acc => {
+		Hotel.findById(id, (err, hotel) => {
+			if(err) {
+				ws.emit('err', 'server-issue')
+			}
+			if(hotel) {
+				if(hotel.dailyRate > acc.money) {
+					ws.emit('err', 'Sorry, you do not have enough balance. Please Recharge.')
+				} else {
+					User.findById(acc._id, (err, user) => {
+						if(!err) {
+							ws.emit('err', 'server-issue')
+						} else {
+							user.money -= hotel.dailyRate
+							var nb = new Booking({
+								user: acc._id,
+								hotel: hotel._id
+							})
+							user.save()
+							nb.save((err) => {
+								if(!err) {
+									ws.emit('returnBooking', true)
+								} else {
+									ws.emit('err', 'server-issue')
+								}
+							})
+						}
+					})
+				}
+			} else {
+				ws.emit('err', 'no-such-hotel')
 			}
 		})
 	}))
