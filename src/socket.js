@@ -64,7 +64,7 @@ export default (ws) => {
 			}
 			if(hotel) {
 				if(hotel.dailyRate > acc.money) {
-					ws.emit('err', 'Sorry, you do not have enough balance. Please Recharge.')
+					ws.emit('err', 'no-money')
 				} else {
 					User.findById(acc._id, (err, user) => {
 						if(!err) {
