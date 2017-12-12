@@ -5,13 +5,13 @@ import startDB from './db/start'
 import socketIO from 'socket.io'
 import socketHandler from './socket'
 const app = express()
-const server = http.createServe(app)
+const server = require('http').createServer(app)
 var io = socketIO(server)
 // start the database boy.
 startDB()
 
 // middleware
-middleware(app)
+middleware(app, io)
 
 // routes
 app.use('/', routes)
