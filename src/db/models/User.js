@@ -11,7 +11,6 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	bookings: [{type: Schema.Types.ObjectId, ref: 'Booking'}],
 	avatar: String,
 	money: {
 		type: Number,

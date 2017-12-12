@@ -1,8 +1,8 @@
 import mongoose, {Schema} from 'mongoose'
 const shortid = require('shortid')
 const BookingSchema = new Schema({
-	of: {type: Schema.Types.ObjectId, ref: 'User'},
-	on: {type: Schema.Types.ObjectId, ref: 'Hotel'},
+	user: {type: Schema.Types.ObjectId, ref: 'User'},
+	hotel: {type: Schema.Types.ObjectId, ref: 'Hotel'},
 	status: {
 		type: String,
 		default: 'Started'

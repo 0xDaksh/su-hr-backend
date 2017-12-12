@@ -1,7 +1,8 @@
 import User from './db/models/User'
+import Booking from './db/models/Booking'
 
 const loginCheck = (ws, cb) => {
-	if(
+	if (
 		typeof ws.handshake.session !== 'undefined' &&
 		typeof ws.handshake.session.user !== 'undefined' &&
 		typeof ws.handshake.session.user._id !== 'undefined'
@@ -10,28 +11,28 @@ const loginCheck = (ws, cb) => {
 	}
 }
 export default (ws) => {
-	ws.on('walletBalance', () => loginCheck(ws, (user) => {
-		User.findById(user._id, (err, user) => {
-			if(err) {
+	ws.on('walletBalance', () => loginCheck(ws, (acc) => {
+		User.findById(acc._id, (err, user) => {
+			if (err) {
 				ws.emit('err', 'server-issue')
 			}
-			if(user) {
+			if (user) {
 				ws.emit('returnWalletBalance', user.money)
 			} else {
 				ws.emit('err', 'no-user')
 			}
-		})		
+		})
 	}))
 
 	ws.on('rechargewallet', (val) => loginCheck(ws, (acc) => {
 		User.findById(acc._id, (err, user) => {
-			if(err) {
+			if (err) {
 				ws.emit('err', 'server-issue')
 			}
-			if(user) {
+			if (user) {
 				user.money += val
 				user.save((err) => {
-					if(!err) {
+					if (!err) {
 						ws.emit('returnRechargeWallet', user.money)
 					} else {
 						ws.emit('err', 'server-issue')
@@ -39,6 +40,18 @@ export default (ws) => {
 				})
 			} else {
 				ws.emit('err', 'no-user')
+			}
+		})
+	}))
+	ws.on('getBookings', () => loginCheck(ws, (acc) => {
+		Booking.find({user: acc._id}).populate('hotel').exec((err, bookings) => {
+			if(err) {
+				ws.emit('err', 'server-issue')
+			} 
+			if(bookings) {
+				ws.emit('returnBookings', bookings)
+			} else {
+				ws.emit('err', 'no-booking')
 			}
 		})
 	}))

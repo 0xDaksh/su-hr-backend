@@ -3,7 +3,6 @@ const shortid = require('shortid')
 const HotelSchema = new Schema({
 	name: String,
 	address: String,
-	bookings: [{type: Schema.Types.ObjectId, ref: 'Booking'}],
 	averageRating: Number,
 	image: String,
 	id: {
