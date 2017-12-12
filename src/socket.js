@@ -1,5 +1,6 @@
 import User from './db/models/User'
 import Booking from './db/models/Booking'
+import Hotel from './db/models/Hotel'
 
 const loginCheck = (ws, cb) => {
 	if (
@@ -30,7 +31,7 @@ export default (ws) => {
 				ws.emit('err', 'server-issue')
 			}
 			if (user) {
-				user.money += val
+				user.money += parseFloat(val)
 				user.save((err) => {
 					if (!err) {
 						ws.handshake.session.money = user.money
@@ -58,19 +59,20 @@ export default (ws) => {
 		})
 	}))
 	ws.on('bookHotel', (id) => loginCheck(ws, acc => {
-		Hotel.findById(id, (err, hotel) => {
+		Hotel.findOne({id: id}, (err, hotel) => {
 			if(err) {
 				ws.emit('err', 'server-issue')
 			}
 			if(hotel) {
-				if(hotel.dailyRate > acc.money) {
-					ws.emit('err', 'no-money')
-				} else {
-					User.findById(acc._id, (err, user) => {
-						if(!err) {
-							ws.emit('err', 'server-issue')
+				User.findById(acc._id, (err, user) => {
+					if(err) {
+						ws.emit('err', 'server-issue')
+					} 
+					if(user) {
+						if(hotel.dailyRate > user.money) {
+							ws.emit('err', 'no-money')
 						} else {
-							user.money -= hotel.dailyRate
+							user.money -= parseFloat(hotel.dailyRate)
 							var nb = new Booking({
 								user: acc._id,
 								hotel: hotel._id
@@ -84,8 +86,8 @@ export default (ws) => {
 								}
 							})
 						}
-					})
-				}
+					}
+				})
 			} else {
 				ws.emit('err', 'no-such-hotel')
 			}
