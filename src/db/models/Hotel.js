@@ -3,7 +3,7 @@ const shortid = require('shortid')
 const HotelSchema = new Schema({
 	name: String,
 	address: String,
-	users: [{type: Schema.Types.ObjectId, ref: 'User'}],
+	bookings: [{type: Schema.Types.ObjectId, ref: 'Booking'}],
 	averageRating: Number,
 	image: String,
 	id: {
@@ -11,7 +11,8 @@ const HotelSchema = new Schema({
 		unique: true,
 		required: true,
 		default: shortid.generate
-	}
+	},
+	dailyRate: Number
 })
 
 export default mongoose.model('Hotel', HotelSchema)
