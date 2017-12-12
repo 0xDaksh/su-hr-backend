@@ -3,6 +3,10 @@ const shortid = require('shortid')
 const BookingSchema = new Schema({
 	of: {type: Schema.Types.ObjectId, ref: 'User'},
 	on: {type: Schema.Types.ObjectId, ref: 'Hotel'},
+	status: {
+		type: String,
+		default: 'Started'
+	},
 	id: {
 		type: String,
 		unique: true,
