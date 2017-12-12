@@ -42,39 +42,6 @@ router.get('/logout', isLoggedIn, (req, res) => {
 	})
 })
 
-router.post('/book', isLoggedIn, (req, res) => {
-	if(req.body.id && req.body.id !== '') {
-		Hotel.findOne({id: req.body.id}).exec((err, hotel) => {
-			if(err) {
-				throwServerIssue(res, 'booked')
-			} else {
-				if(!hotel) {
-					res.json({
-						error: 'no hotel found',
-						booked: null
-					})
-				} else {
-					User.findById(req.session.user._id, (err, user) => {
-						user.hotels.push(hotel._id)
-						hotel.users.push(user._id)
-						hotel.save()
-						user.save()
-					})
-					res.json({
-						error: null,
-						booked: true
-					})
-				}
-			}
-		})
-	} else {
-		res.json({
-			error: 'id wasnt provided',
-			booked: null			
-		})
-	}
-})
-
 router.get('/hotels/:id', (req, res) => {
 	if(req.params.id !== '') {
 		Hotel.findOne({id: req.params.id}, (err, hotel) => {
