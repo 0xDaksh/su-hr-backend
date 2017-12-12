@@ -2,8 +2,11 @@ import express from 'express'
 import routes from './routes'
 import middleware from './middlware'
 import startDB from './db/start'
+import socketIO from 'socket.io'
+import socketHandler from './socket'
 const app = express()
-
+const server = http.createServe(app)
+var io = socketIO(server)
 // start the database boy.
 startDB()
 
@@ -13,7 +16,12 @@ middleware(app)
 // routes
 app.use('/', routes)
 
+// socket.io
+io.on('connection', (ws) => {
+	socketHandler(ws)
+})
+
 // export it
 export {
-	app
+	server
 }
